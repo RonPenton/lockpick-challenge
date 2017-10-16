@@ -1,0 +1,28 @@
+{
+  "name": "lockpick-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "tsc -p ./test/tsconfig.json && mocha",
+    "build": "tsc -p ./src/tsconfig.json",
+    "run": "node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://rlp2@git.ellucian.com/scm/~rlp2/lockpick-challenge.git"
+  },
+  "author": "Ron Penton",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^8.0.34",
+    "chai": "^4.1.2",
+    "lodash": "^4.17.4",
+    "mocha": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/lodash": "^4.14.77",
+    "@types/mocha": "^2.2.43"
+  }
+}
