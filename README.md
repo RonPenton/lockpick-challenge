@@ -1,5 +1,25 @@
 # Lockpick Challenge
 
+## Setup/Run
+
+```
+npm install
+npm run build
+npm run-script run
+```
+
+This creates a command-line node app that allows users to enter data and it will return the results as they are entered.
+
+To run the testing harness, run:
+
+```
+npm run-script run-auto 10000
+```
+
+The number at the end indicates the number of iterations to run. If not specified, it defaults to 1000. 
+
+## Methodology
+
 My submission. Built in Typescript in a mostly-functional manner (there are a few parts where I slipped into imperitive programming for speed improvements to the algorithms). Uses a greedy algorithm to solve the problem:
 
 1. Gives an initial guess, asking for an optimal amount of information about the board by asking for X different colors, where X is the number of places allowed in the combination. 
@@ -46,20 +66,3 @@ Moved back to remaining over all, BGOR, no random pick, achieved the same 4.081 
 At the end of the day, I'm happy to say I've exhausted all of my ideas for optimizing this problem. The average case is minimized to the best of my abilities. I'm a little worried that going up to a maximum of 5 guesses will eventually be my downfall, but I suppose that's a risk I have to take. The input data is essentially random to me, and going by the numbers, the current version of this algorithm minimizes the solution length on random data. 
 
 
-# Setup/Run
-
-```
-npm install
-npm run build
-npm run-script run
-```
-
-This creates a command-line node app that allows users to enter data and it will return the results as they are entered.
-
-To run the testing harness, run:
-
-```
-npm run-script run-auto 10000
-```
-
-The number at the end indicates the number of iterations to run. If not specified, it defaults to 1000. 
