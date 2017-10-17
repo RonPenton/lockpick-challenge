@@ -10,6 +10,21 @@ npm run-script run
 
 This creates a command-line node app that allows users to enter data and it will return the results as they are entered.
 
+The input format is flexible. All of the following are accepted:
+
+```
+1w
+2b
+1w2b
+2b1w
+1W2b
+2B1w
+2B2W
+0b0w
+```
+
+Etc, you get the point. An empty line is intrepretted as 0W0B. Actually, you should never have to do that, because with the no-duplicates rule, 0W0B is never a valid response anymore. So don't enter that. You'll break the program. 
+
 To run the testing harness, run:
 
 ```

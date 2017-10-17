@@ -60,7 +60,8 @@ const consoleDelegates: ConsoleDelegates = rl => {
             return new Promise((resolve, _reject) => {
                 console.log(guess);
                 rl.question("response> ", input => {
-                    resolve(parseScore(input));
+                    const score = parseScore(input);
+                    resolve(score);
                 });
             });
         },
