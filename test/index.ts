@@ -2,6 +2,7 @@ import * as chai from 'chai';
 var expect = chai.expect;
 
 import * as picker from '../dist/lib';
+import * as _ from 'lodash';
 
 describe('integration tests', () => {
     it('should compare scores properly', () => {
@@ -54,4 +55,13 @@ describe('integration tests', () => {
         )).to.equal(true);
     });
 
+    it('should compute the inital set so that there are no duplicate letters', () => {
+        const set = picker.initializeSet();
+        set.forEach(x => {
+            const array = _.range(x.length).map(i => x[i]);
+            array.forEach(l => {
+                expect(array.filter(z => z == l).length).to.equal(1);
+            });
+        });
+    });
 });

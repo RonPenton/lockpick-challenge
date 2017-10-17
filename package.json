@@ -6,8 +6,9 @@
   "scripts": {
     "test": "tsc -p ./test/tsconfig.json && mocha",
     "build": "tsc -p ./src/tsconfig.json",
-    "run": "node ./dist/index.js"
-  },
+    "run": "node ./dist/index.js",
+    "run-auto": "node ./dist/index.js auto"
+},
   "repository": {
     "type": "git",
     "url": "https://rlp2@git.ellucian.com/scm/~rlp2/lockpick-challenge.git"

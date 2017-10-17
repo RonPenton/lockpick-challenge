@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var chai = require("chai");
 var expect = chai.expect;
 var picker = require("../dist/lib");
+var _ = require("lodash");
 describe('integration tests', function () {
     it('should compare scores properly', function () {
         var score1 = { white: 0, black: 2 };
@@ -16,7 +17,7 @@ describe('integration tests', function () {
         expect(picker.scoreEquals(score3, score4)).to.equal(false);
         expect(picker.scoreEquals(score3, score5)).to.equal(false);
     });
-    it('should compare scores properly', function () {
+    it('should compute scores properly', function () {
         expect(picker.scoreEquals(picker.calculateScore("BBGG", "GOYP"), { white: 1, black: 0 })).to.equal(true);
         expect(picker.scoreEquals(picker.calculateScore("BBGG", "GGYP"), { white: 2, black: 0 })).to.equal(true);
         expect(picker.scoreEquals(picker.calculateScore("BBGG", "BBGG"), { white: 0, black: 4 })).to.equal(true);
@@ -25,5 +26,14 @@ describe('integration tests', function () {
         expect(picker.scoreEquals(picker.calculateScore("BPBP", "YGYG"), { white: 0, black: 0 })).to.equal(true);
         expect(picker.scoreEquals(picker.calculateScore("BPYG", "GPYB"), { white: 2, black: 2 })).to.equal(true);
         expect(picker.scoreEquals(picker.calculateScore("OPYG", "GPYB"), { white: 1, black: 2 })).to.equal(true);
+    });
+    it('should compute the inital set so that there are no duplicate letters', function () {
+        var set = picker.initializeSet();
+        set.forEach(function (x) {
+            var array = _.range(x.length).map(function (i) { return x[i]; });
+            array.forEach(function (l) {
+                expect(array.filter(function (z) { return z == l; }).length).to.equal(1);
+            });
+        });
     });
 });
