@@ -31,9 +31,6 @@ if (combinationLength > colors.length) {
     throw new Error("An invalid combination length was provided, and it requires that the rules of the system be broken.");
 }
 
-/** A list of indices into a given combination string. This is more a performance optimization than anything. */
-const combinationIndices = _.range(combinationLength);
-
 /** A precalculated list of all possible score permutations. An optimization for the hot-loop calculateScore() function. */
 const allScores = getAllPossibleScores();
 
@@ -85,17 +82,15 @@ function findNextGuess(remaining: string[], usedCodes: Set<string>) {
 
     // Turned this iterative to speed it up.
     // Functional looked nicer, but it's a hot O(n^3) loop. Everything counts. 
-    for (let p = 0; p < remaining.length; p++) {
-        const possibility = remaining[p];
+    for (let possibility of remaining) {
         if (usedCodes.has(possibility))
             continue;
 
         let max = 0;
-        for (let s = 0; s < allScores.length; s++) {
-            const score = allScores[s];
+        for (let score of allScores) {
             let count = 0;
-            for (let g = 0; g < remaining.length; g++) {
-                if (scoreEquals(calculateScore(remaining[g], possibility), score))
+            for (let guess of remaining) {
+                if (scoreEquals(calculateScore(guess, possibility), score))
                     count++;
             }
             max = Math.max(count, max);
@@ -114,7 +109,11 @@ export function scoreEquals(left: Score, right: Score) {
     return left.white == right.white && left.black == right.black;
 }
 
-/** Removes all possibilities from the remaining list that don't match the score we were given. */
+/** 
+ * Removes all possibilities from the remaining list that don't match the score we were given.
+ * Since we know that score(x,y) == score(y,x), we can assume that any remaining possibility
+ * that doesn't give us the score that was returned with our guess can never be a match. 
+ */
 function parePossibilities(possibilities: string[], guess: string, score: Score) {
     return possibilities.filter(p => isValidScore(p, guess, score));
 }
@@ -127,6 +126,7 @@ function isValidScore(possibility: string, guess: string, score: Score) {
 
 /** Calculates a score given two combinations. */
 const memoizedScores = new Map<string, Score>();
+const combinationIndices = _.range(combinationLength);
 export function calculateScore(guess: string, possibility: string) {
     // return cached version if it exists. Hot-loop optimization.
     const memo = memoizedScores.get(guess + possibility);
@@ -197,10 +197,17 @@ export function initializeSet() {
 
 /** Recursive function that permutates a set of numbers for a set depth. */
 function permutateString(set: number[], current: number[], depth: number): string[] {
+    // Use recursion to calculate the string permutations. Start by calculating "1, 2, 3, 4, 5, 6",
+    // then recurse down a level, calculating "12, 13, 14, 15, 16" and "21, 23, 24, 25, 26", etc.
+    // Continue until the desired depth is reached.
+
+    // base case. No more permutations to explore, convert the "current" array into letters,
+    // and join them into a string representing the lock combination. 
     if (depth == 0) {
         return [current.map(x => colors[x]).join('')];
     }
 
+    // More iterations to perform. Recurse down another level. 
     return set
         .filter(i => current.indexOf(i) == -1)   // filtering added when the no-duplicates rule was discovered.
         .map(i => permutateString(set, current.concat(i), depth - 1))
@@ -209,6 +216,11 @@ function permutateString(set: number[], current: number[], depth: number): strin
 
 /** Permutates a list of all possible scores that can exist. */
 function getAllPossibleScores() {
+    // Scores are of the form xWyB, where the sum of x+y can be at most "combinationlength", and at least 0. 
+    // Therefore, iterate through the number 0..combinationlength, and for each sum, calculate
+    // the permutations of scores that equal that sum. 
+    // For example, getScoresForSum(3) returns: {0,3}, {1,2}, {2,1}, {3,0}.
+    // Concatenate all permutations and we have all valid scores. 
     return _.range(0, combinationLength + 1)
         .map(sum => getScoresForSum(sum))
         .reduce((p, c) => p.concat(c), []);
