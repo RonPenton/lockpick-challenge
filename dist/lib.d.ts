@@ -33,7 +33,7 @@ export declare function parseScore(score: string): Score;
 /** Prints a score in AR challenge format, for output purposes. */
 export declare function printScore(score: Score): string;
 /** Computes a set of all possible combinations */
-export declare function initializeSet(): string[];
+export declare function getAllCombinations(): string[];
 /**
  * Gets a random configuration from the set of all possible combinations.
  * There's way faster ways to do this, but it's only for testing so I opted for easiest.

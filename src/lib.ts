@@ -35,7 +35,7 @@ if (combinationLength > colors.length) {
 const allScores = getAllPossibleScores();
 
 /** Perform the main loop of the solver. */
-export async function loop(delegates: Delegates, guess?: string, possibilities = initializeSet(), usedCodes = new Set<string>()) {
+export async function loop(delegates: Delegates, guess?: string, possibilities = getAllCombinations(), usedCodes = new Set<string>()) {
     if (!guess) {
         // Calculate the first guess. Since no locks can have multiples of the same letter, simply pick the first X
         // colors and use those as the guess. 
@@ -141,21 +141,13 @@ export function calculateScore(guess: string, possibility: string) {
     const g = nonMatchingIndices.map(i => guess[i]);
     const p = nonMatchingIndices.map(i => possibility[i]);
 
-    // Not a fan of iteration here but couldn't think of a simpler way to represent what's going on
-    // while also being performant. Iteration it is. Remove items from P if they exist in G.
-    // Actually this was more important in the earlier version of the app, when combinations could
-    // hold duplicate values. Now that I think about it, this becomes much simpler in the current version.
-    // Still, I'm leaving it, because this function works in all cases, whether duplicates are allowed
-    // or not. You never know when the future is going to change requirements I guess. Maybe should be 
-    // exposed for unit tests in that case but it's a private function, and it works, so... bother.
-    let white = 0;
-    g.forEach(v => {
-        const i = p.indexOf(v);
-        if (i != -1) {
-            white++;
-            p.splice(i, 1);
-        }
-    });
+    // white is the number of non-matching indices where there exists at least one matching entry in p
+    // for every entry in g. If the "No two slots can have the same color simultaneously" rule
+    // were not in place, this calculation becomes more complex, because of the following situation:
+    // "BBOO" vs "OOBG". This current version would erroneously report the score as 4W, because
+    // it would match both B's in the first with the single B in the second. Instead the correct 
+    // answer is 3W, as you're supposed to cross out the eliminated items as you run across them.
+    let white = g.filter(x => p.indexOf(x) != -1).length;
 
     // black is the number of items that matched; ie len(guess) - len(nonmatching)
     const score = { white, black: guess.length - nonMatchingIndices.length };
@@ -191,7 +183,7 @@ export function printScore(score: Score) {
 }
 
 /** Computes a set of all possible combinations */
-export function initializeSet() {
+export function getAllCombinations() {
     return permutateString(_.range(0, colors.length), [], combinationLength);
 }
 
@@ -237,6 +229,6 @@ function getScoresForSum(sum: number) {
  * There's way faster ways to do this, but it's only for testing so I opted for easiest.
  */
 export function getRandomConfig(): string {
-    const set = initializeSet();
+    const set = getAllCombinations();
     return set[_.random(0, set.length - 1, false)];
 }
