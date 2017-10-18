@@ -142,7 +142,7 @@ export function calculateScore(guess: string, possibility: string) {
     const p = nonMatchingIndices.map(i => possibility[i]);
 
     // Not a fan of iteration here but couldn't think of a simpler way to represent what's going on
-    // while also being performant. Iteration it is. Remove items from P if they exist in Q.
+    // while also being performant. Iteration it is. Remove items from P if they exist in G.
     // Actually this was more important in the earlier version of the app, when combinations could
     // hold duplicate values. Now that I think about it, this becomes much simpler in the current version.
     // Still, I'm leaving it, because this function works in all cases, whether duplicates are allowed
