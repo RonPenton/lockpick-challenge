@@ -37,9 +37,9 @@ const allScores = getAllPossibleScores();
 /** Perform the main loop of the solver. */
 export async function loop(delegates: Delegates, guess?: string, possibilities = getAllCombinations(), usedCodes = new Set<string>()) {
     if (!guess) {
-        // Calculate the first guess. Since no locks can have multiples of the same letter, simply pick the first X
-        // colors and use those as the guess. 
-        guess = colors.slice(0, combinationLength).join('');
+        // Optimal starting moves which minimize the average length of solution:
+        // ["OYGP", "OPGY", "RYOG", "YRGO", "PYGO", "PYGR"];
+        guess = "PYGO";
     }
 
     // Give the user our guess. 
