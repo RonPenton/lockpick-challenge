@@ -28,10 +28,8 @@ Etc, you get the point. An empty line is intrepretted as 0W0B. Actually, you sho
 To run the testing harness, run:
 
 ```
-npm run-script run-auto 10000
+npm run-script run-auto
 ```
-
-The number at the end indicates the number of iterations to run. If not specified, it defaults to 1000. 
 
 ## Methodology
 
